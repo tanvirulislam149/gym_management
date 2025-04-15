@@ -30,10 +30,10 @@ class BookPlansSerializer(serializers.ModelSerializer):
             booked_plans_id = book_plans.id,
             start_date__lte=now(),
             end_date__gte=now()
-        )[0]
+        )
         print(plan, "---------------")
-        if plan:
-            return f"{plan.start_date} - {plan.end_date}"
+        if plan and plan[0]:
+            return f"{plan[0].start_date} - {plan[0].end_date}"
         else:
             return "No active plan"
 
@@ -89,7 +89,7 @@ class CreateBookClassSerializer(serializers.ModelSerializer):
         )
         print(plans, "---------------", date_time)
         if not plans.exists():
-            raise serializers.ValidationError("This class is not in between your paid plans.")
+            raise serializers.ValidationError("This class is not in between your paid plans. Please buy or renew a plan.")
         if fitness_class.date_time <= now():
             raise serializers.ValidationError("The date and time must be in the future.")
         return fitness_class
@@ -143,11 +143,11 @@ class CreatePaymentPlansSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         planId = validated_data["booked_plans"]
         plan = Book_plans.objects.get(pk = planId)
-        if plan.plans.id == 1:
+        if plan.plans.type == "Monthly":
             validated_data["end_date"] = validated_data["start_date"] + relativedelta(months=1)
-        elif plan.plans.id == 2:
+        elif plan.plans.type == "Three Months":
             validated_data["end_date"] = validated_data["start_date"] + relativedelta(months=3)
-        elif plan.plans.id == 3:
+        elif plan.plans.type == "Half Yearly":
             validated_data["end_date"] = validated_data["start_date"] + relativedelta(months=6)
         else:
             validated_data["end_date"] = validated_data["start_date"] + relativedelta(months=12)
