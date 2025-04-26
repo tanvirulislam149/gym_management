@@ -1,5 +1,6 @@
 from django.db import models
 from user.models import CustomUser
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 class Plans(models.Model):
@@ -25,9 +26,20 @@ class Plans(models.Model):
 class Fitness_classes(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField()
-    date_time = models.DateTimeField()
-    instructor = models.CharField(max_length=50)
+    image = CloudinaryField("image")
     plans = models.ManyToManyField(Plans, related_name="fitness_classes")
     
     def __str__(self):
         return f"{self.name} -- {self.date_time}"
+    
+
+
+
+
+
+
+
+
+
+    # date_time = models.DateTimeField()
+    # instructor = models.CharField(max_length=50)

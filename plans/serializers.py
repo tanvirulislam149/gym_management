@@ -20,11 +20,12 @@ class CreatePlansSerializer(serializers.ModelSerializer):
 
 
 class FitnessClassSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField()
     class Meta:
         model = Fitness_classes
-        fields = ["id", "name", "description", "date_time", "instructor"]
+        fields = ["id", "name", "image", "description"]
 
-    def validate_date_time(self, dateTime):
-        if dateTime <= now():
-            raise serializers.ValidationError("The date and time must be in the future.")
-        return dateTime
+    # def validate_date_time(self, dateTime):
+    #     if dateTime <= now():
+    #         raise serializers.ValidationError("Date and time must be in the future.")
+    #     return dateTime

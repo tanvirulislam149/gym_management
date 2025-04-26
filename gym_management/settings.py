@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 from decouple import config
+import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -147,9 +148,23 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / "media"
+
 STATIC_ROOT = BASE_DIR / "staticfiles"
 # STATIC_FILES_DIR = BASE_DIR / "static"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+
+# Configuration for cloudinary
+cloudinary.config( 
+    cloud_name = config("Cloud_name"),
+    api_key = config("API_key"),
+    api_secret = config("API_secret"), # Click 'View API Keys' above to copy your API secret
+    secure=True
+)
+
+#Media storage settings
+DEFAULT_FILE_STORAGE = "cloundinary_storage.storage.MediaCloudinaryStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

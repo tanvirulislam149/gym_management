@@ -12,7 +12,7 @@ class PlansViewSet(ModelViewSet):
     def get_permissions(self):
         if self.request.method in ["POST", "PATCH", "DELETE"]:
             return [IsAdminUser()]
-        return [IsAuthenticated()]
+        return []
 
     def get_serializer_class(self):
         if self.request.method in ["POST", "PATCH"]:
@@ -28,4 +28,4 @@ class FitnessClassesViewSet(ModelViewSet):
     def get_permissions(self):
         if self.request.method in ["POST", "PUT", "PATCH", "DELETE"]:
             return [IsAdminUser()]
-        return [IsAuthenticated()]
+        return []
