@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
-from plans.models import Plans, Fitness_classes
+from plans.models import Plans, Fitness_classes_category
 from plans.serializers import PlansSerializer, FitnessClassSerializer, CreatePlansSerializer
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
@@ -22,7 +22,7 @@ class PlansViewSet(ModelViewSet):
 
 class FitnessClassesViewSet(ModelViewSet):
     http_method_names = ["get", "post", "patch","put", "delete", "head", "options"]
-    queryset = Fitness_classes.objects.all()
+    queryset = Fitness_classes_category.objects.all()
     serializer_class = FitnessClassSerializer
     
     def get_permissions(self):

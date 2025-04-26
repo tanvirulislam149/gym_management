@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from bookings.models import Book_plans, Book_Fitness_Classes, Payment_plans
-from plans.models import Plans, Fitness_classes
+from plans.models import Plans, Fitness_classes_category
 from decimal import Decimal 
 from user.models import CustomUser
 from django.utils.timezone import now
@@ -62,7 +62,7 @@ class CreateBookPlanSerializer(serializers.ModelSerializer):
 
 class SimpleFitnessClassSerializerForBooking(serializers.ModelSerializer):
     class Meta:
-        model = Fitness_classes
+        model = Fitness_classes_category
         fields = ["id", "name", "description", "date_time", "instructor"]
 
 

@@ -1,6 +1,6 @@
 from django.db import models
 from user.models import CustomUser
-from plans.models import Plans, Fitness_classes
+from plans.models import Plans, Fitness_classes_category
 from uuid import uuid4
 
 # Create your models here.
@@ -40,10 +40,10 @@ class Book_Fitness_Classes(models.Model):
     ]
     id = models.UUIDField(primary_key=True, default = uuid4, editable=False)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="booked_classes")
-    fitness_class = models.ForeignKey(Fitness_classes, on_delete=models.CASCADE)
+    fitness_class = models.ForeignKey(Fitness_classes_category, on_delete=models.CASCADE)
     attendence = models.CharField(max_length=30, choices=ATTENDENCE_STATUS, default="Absent")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.user} X {self.fitness_class} X {self.fitness_class.date_time}"
+        return f"{self.user} X {self.fitness_class} "

@@ -23,14 +23,14 @@ class Plans(models.Model):
         return self.type
 
 
-class Fitness_classes(models.Model):
+class Fitness_classes_category(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField()
     image = CloudinaryField("image")
     plans = models.ManyToManyField(Plans, related_name="fitness_classes")
     
     def __str__(self):
-        return f"{self.name} -- {self.date_time}"
+        return f"{self.name}"
     
 
 

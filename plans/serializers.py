@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from plans.models import Plans, Fitness_classes
+from plans.models import Plans, Fitness_classes_category
 from django.utils.timezone import now
 
 class SimpleFitnessClassSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Fitness_classes
+        model = Fitness_classes_category
         fields = ["id", "name"]
 
 class PlansSerializer(serializers.ModelSerializer):
@@ -22,7 +22,7 @@ class CreatePlansSerializer(serializers.ModelSerializer):
 class FitnessClassSerializer(serializers.ModelSerializer):
     image = serializers.ImageField()
     class Meta:
-        model = Fitness_classes
+        model = Fitness_classes_category
         fields = ["id", "name", "image", "description"]
 
     # def validate_date_time(self, dateTime):
