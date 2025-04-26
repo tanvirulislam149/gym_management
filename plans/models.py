@@ -33,13 +33,14 @@ class Fitness_classes_category(models.Model):
         return f"{self.name}"
     
 
+class Scheduled_classes(models.Model):
+    fitness_class = models.ForeignKey(Fitness_classes_category, on_delete=models.CASCADE)
+    date_time = models.DateTimeField()
+    instructor = models.CharField(max_length=50)
+    total_seats = models.PositiveIntegerField()
+    booked_seats = models.PositiveIntegerField()
+    present_students = models.PositiveIntegerField(default=0)
 
-
-
-
-
-
-
-
-    # date_time = models.DateTimeField()
-    # instructor = models.CharField(max_length=50)
+    class Meta:
+        unique_together = ('fitness_class', 'date_time')
+    

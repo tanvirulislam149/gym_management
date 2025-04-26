@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from plans.views import PlansViewSet, FitnessClassesViewSet
+from plans.views import PlansViewSet, FitnessClassesViewSet, ScheduledClassViewSet
 from bookings.views import BookPlansViewSet, BookClassesViewSet, AttendenceViewSet, PaymentPlansViewSet
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -29,6 +29,7 @@ from django.conf import settings
 router = DefaultRouter()
 router.register("plans", PlansViewSet, basename="plans")
 router.register("fitness_classes", FitnessClassesViewSet, basename="fitness_classes")
+router.register("scheduled_classes", ScheduledClassViewSet, basename="scheduled_classes")
 router.register("book_plans", BookPlansViewSet, basename="book_plans")
 router.register("book_classes", BookClassesViewSet, basename="book_classes")
 router.register("attendence", AttendenceViewSet, basename="attendence")

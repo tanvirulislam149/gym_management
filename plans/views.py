@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
-from plans.models import Plans, Fitness_classes_category
-from plans.serializers import PlansSerializer, FitnessClassSerializer, CreatePlansSerializer
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from plans.models import Plans, Fitness_classes_category, Scheduled_classes
+from plans.serializers import PlansSerializer, FitnessClassSerializer, CreatePlansSerializer, ScheduledClassSerializer, CreateScheduledClassSerializer
+from rest_framework.permissions import IsAdminUser
 
 # Create your views here.
 class PlansViewSet(ModelViewSet):
@@ -24,6 +24,22 @@ class FitnessClassesViewSet(ModelViewSet):
     http_method_names = ["get", "post", "patch","put", "delete", "head", "options"]
     queryset = Fitness_classes_category.objects.all()
     serializer_class = FitnessClassSerializer
+    
+    def get_permissions(self):
+        if self.request.method in ["POST", "PUT", "PATCH", "DELETE"]:
+            return [IsAdminUser()]
+        return []
+
+
+class ScheduledClassViewSet(ModelViewSet):
+    http_method_names = ["get", "post", "patch","put", "delete", "head", "options"]
+    queryset = Scheduled_classes.objects.all()
+    serializer_class = ScheduledClassSerializer
+
+    def get_serializer_class(self):
+        if self.request.method in ["POST", "PATCH", "PUT"]:
+            return CreateScheduledClassSerializer
+        return ScheduledClassSerializer
     
     def get_permissions(self):
         if self.request.method in ["POST", "PUT", "PATCH", "DELETE"]:

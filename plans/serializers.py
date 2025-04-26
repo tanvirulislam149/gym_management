@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from plans.models import Plans, Fitness_classes_category
+from plans.models import Plans, Fitness_classes_category, Scheduled_classes
 from django.utils.timezone import now
 
 class SimpleFitnessClassSerializer(serializers.ModelSerializer):
@@ -25,7 +25,20 @@ class FitnessClassSerializer(serializers.ModelSerializer):
         model = Fitness_classes_category
         fields = ["id", "name", "image", "description"]
 
-    # def validate_date_time(self, dateTime):
-    #     if dateTime <= now():
-    #         raise serializers.ValidationError("Date and time must be in the future.")
-    #     return dateTime
+
+class ScheduledClassSerializer(serializers.ModelSerializer):
+    fitness_class = FitnessClassSerializer()
+    class Meta:
+        model = Scheduled_classes
+        fields = ["id", "fitness_class", "date_time", "instructor", "total_seats", "booked_seats"]
+
+
+class CreateScheduledClassSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Scheduled_classes
+        fields = ["id", "fitness_class", "date_time", "instructor", "total_seats", "booked_seats"]
+
+    def validate_date_time(self, dateTime):
+        if dateTime <= now():
+            raise serializers.ValidationError("Date and time must be in the future.")
+        return dateTime
