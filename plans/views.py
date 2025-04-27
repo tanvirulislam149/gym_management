@@ -3,6 +3,7 @@ from rest_framework.viewsets import ModelViewSet
 from plans.models import Plans, Fitness_classes_category, Scheduled_classes
 from plans.serializers import PlansSerializer, FitnessClassSerializer, CreatePlansSerializer, ScheduledClassSerializer, CreateScheduledClassSerializer
 from rest_framework.permissions import IsAdminUser
+from django_filters.rest_framework import DjangoFilterBackend
 
 # Create your views here.
 class PlansViewSet(ModelViewSet):
@@ -32,6 +33,8 @@ class FitnessClassesViewSet(ModelViewSet):
 
 
 class ScheduledClassViewSet(ModelViewSet):
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ("fitness_class_id",)
     http_method_names = ["get", "post", "patch","put", "delete", "head", "options"]
     queryset = Scheduled_classes.objects.all()
     serializer_class = ScheduledClassSerializer
