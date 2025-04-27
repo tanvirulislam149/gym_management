@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from bookings.models import Book_plans, Book_Fitness_Classes, Payment_plans
-from plans.models import Plans, Fitness_classes_category
+from plans.models import Plans, Fitness_classes_category, Scheduled_classes
 from decimal import Decimal 
 from user.models import CustomUser
 from django.utils.timezone import now
@@ -63,24 +63,31 @@ class CreateBookPlanSerializer(serializers.ModelSerializer):
 class SimpleFitnessClassSerializerForBooking(serializers.ModelSerializer):
     class Meta:
         model = Fitness_classes_category
-        fields = ["id", "name", "description", "date_time", "instructor"]
+        fields = ["id", "name", "description", "image"]
+
+
+class SimpleScheduledClassSerializerForBooking(serializers.ModelSerializer):
+    fitness_class = SimpleFitnessClassSerializerForBooking()
+    class Meta:
+        model = Scheduled_classes
+        fields = ["id", "fitness_class", "date_time", "instructor"]
 
 
 class BookClassSerializer(serializers.ModelSerializer):
     user = SimpleUserSerializer()
-    fitness_class = SimpleFitnessClassSerializerForBooking()
+    scheduled_class = SimpleScheduledClassSerializerForBooking()
     class Meta:
         model = Book_Fitness_Classes
-        fields = ["id", "user", "fitness_class"]
+        fields = ["id", "user", "scheduled_class"]
         read_only_fields = ["user"]
 
 class CreateBookClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book_Fitness_Classes
-        fields = ["fitness_class"]
+        fields = ["scheduled_class"]
 
-    def validate_fitness_class(self, fitness_class):
-        date_time = fitness_class.date_time
+    def validate_scheduled_class(self, scheduled_class):
+        date_time = scheduled_class.date_time
         user = self.context["user"]
         plans = Payment_plans.objects.filter(
             booked_plans__user = user,
@@ -90,22 +97,22 @@ class CreateBookClassSerializer(serializers.ModelSerializer):
         print(plans, "---------------", date_time)
         if not plans.exists():
             raise serializers.ValidationError("This class is not in between your paid plans. Please buy or renew a plan.")
-        if fitness_class.date_time <= now():
+        if scheduled_class.date_time <= now():
             raise serializers.ValidationError("The date and time must be in the future.")
-        return fitness_class
+        return scheduled_class
 
     def create(self, validated_data):
-        fitness_class = validated_data["fitness_class"]
+        scheduled_class = validated_data["scheduled_class"]
         user = self.context["user"]
-        if Book_Fitness_Classes.objects.filter(user = user, fitness_class = fitness_class).exists():
+        if Book_Fitness_Classes.objects.filter(user = user, scheduled_class = scheduled_class).exists():
             raise serializers.ValidationError("You already have booked for this class.")
         
         return Book_Fitness_Classes.objects.create(user = user, **validated_data)
     
     def update(self, instance, validated_data):
-        fitness_class = validated_data["fitness_class"]
+        scheduled_class = validated_data["scheduled_class"]
         user = self.context["user"]
-        if Book_Fitness_Classes.objects.filter(user = user, fitness_class = fitness_class).exists():
+        if Book_Fitness_Classes.objects.filter(user = user, scheduled_class = scheduled_class).exists():
             raise serializers.ValidationError("You already have booked for this class.")
         
         return super().update(instance, validated_data)
@@ -119,10 +126,10 @@ class SimpleBookClassSerializer(serializers.ModelSerializer):
 
 class ClassAttendence(serializers.ModelSerializer):
     user = SimpleUserSerializer(read_only=True)
-    fitness_class = SimpleFitnessClassSerializerForBooking(read_only=True)
+    scheduled_class= SimpleScheduledClassSerializerForBooking(read_only=True)
     class Meta:
         model = Book_Fitness_Classes
-        fields = ["id", "user", "fitness_class", "attendence"]
+        fields = ["id", "user", "scheduled_class", "attendence"]
 
 
 class PaymentPlansSerializer(serializers.ModelSerializer):

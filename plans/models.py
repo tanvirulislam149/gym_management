@@ -43,4 +43,7 @@ class Scheduled_classes(models.Model):
 
     class Meta:
         unique_together = ('fitness_class', 'date_time')
+
+    def __str__(self):
+        return f"{self.fitness_class.name} - {self.date_time}"
     
