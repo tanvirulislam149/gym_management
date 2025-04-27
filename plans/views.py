@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAdminUser
 
 # Create your views here.
 class PlansViewSet(ModelViewSet):
-    http_method_names = ["get", "post", "patch", "delete", "head", "options"]
+    http_method_names = ["get", "post", "patch", "put", "delete", "head", "options"]
     queryset = Plans.objects.all()
     
     def get_permissions(self):
@@ -15,7 +15,7 @@ class PlansViewSet(ModelViewSet):
         return []
 
     def get_serializer_class(self):
-        if self.request.method in ["POST", "PATCH"]:
+        if self.request.method in ["POST", "PATCH", "PUT"]:
             return CreatePlansSerializer
         return PlansSerializer
 
