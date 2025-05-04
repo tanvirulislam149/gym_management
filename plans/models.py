@@ -15,6 +15,7 @@ class Plans(models.Model):
         (YEARLY, "Yearly" ),
     ]
     type = models.CharField(max_length=50, choices=TYPE_CHOICES, default=MONTHLY)
+    months = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

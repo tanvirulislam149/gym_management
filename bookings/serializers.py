@@ -150,14 +150,7 @@ class CreatePaymentPlansSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         planId = validated_data["booked_plans"]
         plan = Book_plans.objects.get(pk = planId)
-        if plan.plans.type == "Monthly":
-            validated_data["end_date"] = validated_data["start_date"] + relativedelta(months=1)
-        elif plan.plans.type == "Three Months":
-            validated_data["end_date"] = validated_data["start_date"] + relativedelta(months=3)
-        elif plan.plans.type == "Half Yearly":
-            validated_data["end_date"] = validated_data["start_date"] + relativedelta(months=6)
-        else:
-            validated_data["end_date"] = validated_data["start_date"] + relativedelta(months=12)
+        validated_data["end_date"] = validated_data["start_date"] + relativedelta(months=plan.plans.months)
 
         validated_data["booked_plans"] = plan 
         return Payment_plans.objects.create(amount = plan.price, **validated_data)

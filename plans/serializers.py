@@ -11,12 +11,12 @@ class PlansSerializer(serializers.ModelSerializer):
     fitness_classes = SimpleFitnessClassSerializer(many=True)
     class Meta:
         model = Plans
-        fields = ["id", "type", "price", "fitness_classes"]
+        fields = ["id", "type","months", "price", "fitness_classes"]
 
 class CreatePlansSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plans
-        fields = ["id", "type", "price", "fitness_classes"]
+        fields = ["id", "type", "months", "price", "fitness_classes"]
 
 
 class FitnessClassSerializer(serializers.ModelSerializer):
