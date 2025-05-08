@@ -12,7 +12,7 @@ class BookPlansViewSet(ModelViewSet):
         return Book_plans.objects.filter(user = self.request.user)
     
     def get_permissions(self):
-        if self.request.method in ["DELETE"]:
+        if self.request.method in ["DELETE", "PUT", "PATCH"]:
             return [IsAdminUser()]
         return [IsAuthenticated()]
 

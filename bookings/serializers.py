@@ -52,8 +52,8 @@ class CreateBookPlanSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         plan = validated_data["plans"]
-        if instance.price > plan.price:  
-            raise serializers.ValidationError("You can't update from higher plans to lower plans.")
+        # if instance.price > plan.price:  
+        #     raise serializers.ValidationError("You can't update from higher plans to lower plans.")
         
         instance.plans = plan
         instance.price = plan.price
@@ -94,9 +94,8 @@ class CreateBookClassSerializer(serializers.ModelSerializer):
             start_date__lte=date_time,
             end_date__gte=date_time
         )
-        print(plans, "---------------", date_time)
         if not plans.exists():
-            raise serializers.ValidationError("This class is not in between your paid plans. Please buy or renew a plan.")
+            raise serializers.ValidationError({"message": "This class is not in between your paid plans. Please buy or renew a plan."})
         if scheduled_class.date_time <= now():
             raise serializers.ValidationError("The date and time must be in the future.")
         return scheduled_class
@@ -105,8 +104,13 @@ class CreateBookClassSerializer(serializers.ModelSerializer):
         scheduled_class = validated_data["scheduled_class"]
         user = self.context["user"]
         if Book_Fitness_Classes.objects.filter(user = user, scheduled_class = scheduled_class).exists():
-            raise serializers.ValidationError("You already have booked for this class.")
-        
+            raise serializers.ValidationError({"message": "You already have booked for this class."})
+
+        if scheduled_class.total_seats == scheduled_class.booked_seats:
+            raise serializers.ValidationError({"message": "No seat available in this class."})
+
+        scheduled_class.booked_seats = scheduled_class.booked_seats + 1
+        scheduled_class.save()
         return Book_Fitness_Classes.objects.create(user = user, **validated_data)
     
     def update(self, instance, validated_data):

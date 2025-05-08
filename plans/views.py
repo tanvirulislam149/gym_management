@@ -37,7 +37,6 @@ class ScheduledClassViewSet(ModelViewSet):
     filterset_fields = ("fitness_class_id",)
     http_method_names = ["get", "post", "patch","put", "delete", "head", "options"]
     queryset = Scheduled_classes.objects.all()
-    serializer_class = ScheduledClassSerializer
 
     def get_serializer_class(self):
         if self.request.method in ["POST", "PATCH", "PUT"]:

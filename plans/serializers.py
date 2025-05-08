@@ -30,13 +30,13 @@ class ScheduledClassSerializer(serializers.ModelSerializer):
     fitness_class = FitnessClassSerializer()
     class Meta:
         model = Scheduled_classes
-        fields = ["id", "fitness_class", "date_time", "instructor", "total_seats", "booked_seats"]
+        fields = ["id", "fitness_class", "date_time", "instructor", "total_seats", "booked_seats", "present_students"]
 
 
 class CreateScheduledClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = Scheduled_classes
-        fields = ["id", "fitness_class", "date_time", "instructor", "total_seats", "booked_seats"]
+        fields = ["fitness_class", "date_time", "instructor", "total_seats"]
 
     def validate_date_time(self, dateTime):
         if dateTime <= now():

@@ -14,7 +14,7 @@ class Plans(models.Model):
         (HALF_YEARLY, "Half Yearly" ),
         (YEARLY, "Yearly" ),
     ]
-    type = models.CharField(max_length=50, choices=TYPE_CHOICES, default=MONTHLY)
+    type = models.CharField(max_length=50, default="Monthly")
     months = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -39,7 +39,7 @@ class Scheduled_classes(models.Model):
     date_time = models.DateTimeField()
     instructor = models.CharField(max_length=50)
     total_seats = models.PositiveIntegerField()
-    booked_seats = models.PositiveIntegerField()
+    booked_seats = models.PositiveIntegerField(default=0)
     present_students = models.PositiveIntegerField(default=0)
 
     class Meta:
