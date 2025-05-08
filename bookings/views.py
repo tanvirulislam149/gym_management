@@ -3,6 +3,7 @@ from rest_framework.viewsets import ModelViewSet
 from bookings.models import Book_plans, Book_Fitness_Classes, Payment_plans
 from bookings.serializers import BookPlansSerializer, CreateBookPlanSerializer, BookClassSerializer, CreateBookClassSerializer, ClassAttendence, PaymentPlansSerializer, CreatePaymentPlansSerializer
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django_filters.rest_framework import DjangoFilterBackend
 
 # Create your views here.
 class BookPlansViewSet(ModelViewSet):
@@ -46,6 +47,8 @@ class BookClassesViewSet(ModelViewSet):
         
 
 class AttendenceViewSet(ModelViewSet):
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ("scheduled_class_id",)
     http_method_names = ["get", "put"]
     serializer_class = ClassAttendence
 

@@ -135,6 +135,19 @@ class ClassAttendence(serializers.ModelSerializer):
         model = Book_Fitness_Classes
         fields = ["id", "user", "scheduled_class", "attendence"]
 
+    def update(self, instance, validated_data):
+        scheduled_class = instance.scheduled_class
+        attendence = validated_data["attendence"]
+        if attendence == "Present":
+            print("present")
+            scheduled_class.present_students += 1
+        else:
+            print("absent")
+            scheduled_class.present_students -= 1
+            
+        scheduled_class.save() 
+        return super().update(instance, validated_data)
+
 
 class PaymentPlansSerializer(serializers.ModelSerializer):
     booked_plans = BookPlansSerializer()
