@@ -33,7 +33,7 @@ class BookPlansSerializer(serializers.ModelSerializer):
         )
         print(plan, "---------------")
         if plan and plan[0]:
-            return f"{plan[0].start_date} - {plan[0].end_date}"
+            return f"{plan[0].start_date} to {plan[0].end_date}"
         else:
             return "No active plan"
 
