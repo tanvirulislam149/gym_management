@@ -19,6 +19,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from plans.views import PlansViewSet, FitnessClassesViewSet, ScheduledClassViewSet
 from bookings.views import BookPlansViewSet, BookClassesViewSet, AttendenceViewSet, PaymentPlansViewSet
+from bookings.views import initiate_payment, payment_cancel, payment_success, payment_fail
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -60,6 +61,10 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
     path('', include(router.urls)),
+    path("makePayment/initiate/", initiate_payment, name="initiate-payment"),
+    path("makePayment/success/", payment_success, name="payment-success"),
+    path("makePayment/fail/", payment_fail, name="payment-fail"),
+    path("makePayment/cancel/", payment_cancel, name="payment-cancel"),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
