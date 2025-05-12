@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'gym_management.wsgi.app'
 
 
 CORS_ALLOWED_ORIGINS = [
-    config("FRONTEND_URL")
+    config("FRONTEND_URL"), "http://localhost:3000"
 ]
 
 
