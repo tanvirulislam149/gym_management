@@ -72,7 +72,7 @@ class AttendenceViewSet(ModelViewSet):
 class PaymentPlansViewSet(ModelViewSet):
     def get_queryset(self):
         if self.request.user.is_staff:
-            return Payment_plans.objects.all().order_by("end_date")
+            return Payment_plans.objects.select_related("booked_plans").select_related("booked_plans__user").select_related("booked_plans__plans").all().order_by("end_date")
         return Payment_plans.objects.filter(booked_plans__user = self.request.user).order_by("end_date")
 
     def get_serializer_class(self):
