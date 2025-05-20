@@ -26,7 +26,7 @@ class BookPlansSerializer(serializers.ModelSerializer):
         read_only_fields = ["user", "price", "current_plan_days"]
 
     def get_plan_dates(self, book_plans: Book_plans):
-        plan = Payment_plans.objects.filter(
+        plan = Payment_plans.objects.select_related("booked_plans").select_related("booked_plans__user").select_related("booked_plans__plans").filter(
             booked_plans_id = book_plans.id,
             start_date__lte=now(),
             end_date__gte=now()
