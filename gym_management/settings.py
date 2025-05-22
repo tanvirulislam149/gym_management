@@ -95,7 +95,7 @@ WSGI_APPLICATION = 'gym_management.wsgi.app'
 
 
 CORS_ALLOWED_ORIGINS = [
-    config("FRONTEND_URL"), "http://localhost:3000"
+    config("FRONTEND_URL"), "http://localhost:3000", "http://127.0.0.1:8000"
 ]
 
 
@@ -197,6 +197,13 @@ REST_FRAMEWORK = {
     ),
 }
 
+EMAIL_BACKEND= config("EMAIL_BACKEND")
+EMAIL_HOST= config("EMAIL_HOST")
+EMAIL_USE_TLS= config("EMAIL_USE_TLS")
+EMAIL_PORT= config("EMAIL_PORT")
+EMAIL_HOST_USER= config("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD= config("EMAIL_HOST_PASSWORD")
+
 
 SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',),
@@ -204,6 +211,14 @@ SIMPLE_JWT = {
 }
 
 DJOSER = {
+    "EMAIL_FRONTEND_PROTOCOL": config("FRONTEND_PROTOCOL"),
+    "EMAIL_FRONTEND_DOMAIN": config("FRONTEND_DOMAIN"),
+    "EMAIL_FRONTEND_SITE_NAME": "Muscle Gain",
+    'PASSWORD_RESET_CONFIRM_URL': 'password-reset-confirm/{uid}/{token}/',
+    'SEND_PASSWORD_RESET_EMAIL': True,
+    'EMAIL': {
+        'password_reset': 'djoser.email.PasswordResetEmail',
+    },
     'SERIALIZERS': {
         'user_create': 'user.serializers.UserCreateSerializer',
         'user': 'user.serializers.UserSerializer',
@@ -222,3 +237,6 @@ SWAGGER_SETTINGS = {
       }
    }
 }
+
+
+
