@@ -2,7 +2,8 @@ from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from plans.models import Plans, Fitness_classes_category, Scheduled_classes, Review
 from plans.serializers import PlansSerializer, FitnessClassSerializer, CreatePlansSerializer, ScheduledClassSerializer, CreateScheduledClassSerializer, ReviewSerializer
-from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAdminUser
+from plans.permissions import IsReviewAuthorOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 
 # Create your views here.
@@ -51,7 +52,7 @@ class ScheduledClassViewSet(ModelViewSet):
 
 class ReviewViewset(ModelViewSet):
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsReviewAuthorOrReadOnly]
 
     # lookup_field = 'pk'
 
