@@ -1,6 +1,7 @@
 from django.db import models
 from user.models import CustomUser
 from cloudinary.models import CloudinaryField
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
 class Plans(models.Model):
@@ -48,3 +49,14 @@ class Scheduled_classes(models.Model):
     def __str__(self):
         return f"{self.fitness_class.name} - {self.date_time}"
     
+
+class Review(models.Model):
+    fitness_class = models.ForeignKey(Fitness_classes_category, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    comment = models.TextField()
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
+
+    def __str__(self):
+        return f"Review on {self.fitness_class.name} by {self.user.first_name}"

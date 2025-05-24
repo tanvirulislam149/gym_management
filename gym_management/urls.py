@@ -16,8 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from plans.views import PlansViewSet, FitnessClassesViewSet, ScheduledClassViewSet
+from rest_framework_nested import routers
+from plans.views import PlansViewSet, FitnessClassesViewSet, ScheduledClassViewSet, AllReviewViewSet, ReviewViewset
 from bookings.views import BookPlansViewSet, BookClassesViewSet, AttendenceViewSet, PaymentPlansViewSet
 from bookings.views import initiate_payment, payment_cancel, payment_success, payment_fail
 from rest_framework import permissions
@@ -28,7 +28,7 @@ from django.conf import settings
 from debug_toolbar.toolbar import debug_toolbar_urls
 
 
-router = DefaultRouter()
+router = routers.DefaultRouter()
 router.register("plans", PlansViewSet, basename="plans")
 router.register("fitness_classes", FitnessClassesViewSet, basename="fitness_classes")
 router.register("scheduled_classes", ScheduledClassViewSet, basename="scheduled_classes")
@@ -36,8 +36,10 @@ router.register("book_plans", BookPlansViewSet, basename="book_plans")
 router.register("book_classes", BookClassesViewSet, basename="book_classes")
 router.register("attendence", AttendenceViewSet, basename="attendence")
 router.register("payment", PaymentPlansViewSet, basename="payment")
+router.register("all_reviews", AllReviewViewSet, basename="all_reviews")
 
-
+fitness_cls_router = routers.NestedDefaultRouter(router, "fitness_classes", lookup='fitness_class')
+fitness_cls_router.register('reviews', ReviewViewset, basename='fitness_class-reviews')
 
 
 
@@ -52,6 +54,10 @@ schema_view = get_schema_view(
    ),
    public=True,
    permission_classes=(permissions.AllowAny,),
+#    patterns=[
+#         path('/', include(router.urls)),
+#         path('/', include(fitness_cls_router.urls)),
+#     ],
 )
 
 
@@ -62,6 +68,7 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
     path('', include(router.urls)),
+    path('', include(fitness_cls_router.urls)),
     path("makePayment/initiate/", initiate_payment, name="initiate-payment"),
     path("makePayment/success/", payment_success, name="payment-success"),
     path("makePayment/fail/", payment_fail, name="payment-fail"),
