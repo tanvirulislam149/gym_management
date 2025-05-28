@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.http import HttpResponseRedirect
 from decouple import config
+from django.db.models import Sum, Count
 
 # Create your views here.
 class BookPlansViewSet(ModelViewSet):
@@ -149,3 +150,31 @@ def payment_fail(request):
     payment_plan = Payment_plans.objects.get(id=payment_id)
     payment_plan.delete()
     return HttpResponseRedirect(f"{config("FRONTEND_URL")}/dashboard/my_plans")
+
+
+
+class DashboardViewSet(ModelViewSet):
+    http_method_names = ['get', "head", "options"]
+    
+    def list(self, request):
+        data = {
+            "earning": Payment_plans.objects.aggregate(Sum("amount")),
+            "Total_booked_class": Book_Fitness_Classes.objects.aggregate(Count("id")),
+            "Total_booked_plan": Book_plans.objects.aggregate(Count("id")),
+            "earning_data": Payment_plans.objects
+            .values(
+                'booked_plans__plans__type'
+            )
+            .annotate(total_amount=Sum('amount')),
+            "booked_plan_data": Book_plans.objects
+            .values(
+                'plans__type'
+            )
+            .annotate(count=Count('id')),
+            "booked_class_data": Book_Fitness_Classes.objects
+            .values(
+                'scheduled_class__fitness_class__name'
+            )
+            .annotate(count=Count('id'))
+        }
+        return Response(data)

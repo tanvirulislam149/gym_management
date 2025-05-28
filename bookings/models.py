@@ -7,7 +7,7 @@ from uuid import uuid4
 class Book_plans(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="booked_plan")
-    plans = models.OneToOneField(Plans, on_delete=models.CASCADE)
+    plans = models.ForeignKey(Plans, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
