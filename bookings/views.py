@@ -155,12 +155,13 @@ def payment_fail(request):
 
 class DashboardViewSet(ModelViewSet):
     http_method_names = ['get', "head", "options"]
+    permission_classes = [IsAdminUser]
     
     def list(self, request):
         data = {
             "earning": Payment_plans.objects.aggregate(Sum("amount")),
             "Total_booked_class": Book_Fitness_Classes.objects.aggregate(Count("id")),
-            "Total_booked_plan": Book_plans.objects.aggregate(Count("id")),
+            "Total_payment": Payment_plans.objects.aggregate(Count("id")),
             "earning_data": Payment_plans.objects
             .values(
                 'booked_plans__plans__type'
@@ -174,6 +175,11 @@ class DashboardViewSet(ModelViewSet):
             "booked_class_data": Book_Fitness_Classes.objects
             .values(
                 'scheduled_class__fitness_class__name'
+            )
+            .annotate(count=Count('id')),
+            "payment_records_data": Payment_plans.objects
+            .values(
+                'booked_plans__plans__type'
             )
             .annotate(count=Count('id'))
         }
