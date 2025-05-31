@@ -37,7 +37,7 @@ class ScheduledClassViewSet(ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = ("fitness_class_id",)
     http_method_names = ["get", "post", "patch","put", "delete", "head", "options"]
-    queryset = Scheduled_classes.objects.all()
+    queryset = Scheduled_classes.objects.all().order_by("-date_time")
 
     def get_serializer_class(self):
         if self.request.method in ["POST", "PATCH", "PUT"]:
