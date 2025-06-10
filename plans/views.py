@@ -5,6 +5,8 @@ from plans.serializers import PlansSerializer, FitnessClassSerializer, CreatePla
 from rest_framework.permissions import IsAdminUser
 from plans.permissions import IsReviewAuthorOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
+from notification.models import Notification
+from user.models import CustomUser
 
 # Create your views here.
 class PlansViewSet(ModelViewSet):
@@ -38,6 +40,14 @@ class ScheduledClassViewSet(ModelViewSet):
     filterset_fields = ("fitness_class_id",)
     http_method_names = ["get", "post", "patch","put", "delete", "head", "options"]
     queryset = Scheduled_classes.objects.all().order_by("-date_time")
+
+    def perform_create(self, serializer):
+        serializer.save()
+        data = serializer.data
+        users = CustomUser.objects.all()
+        className = Fitness_classes_category.objects.get(id=data.get("fitness_class"))
+        notification = Notification.objects.create(message=f"New class available on {className}.")
+        notification.receiver.add(*users)
 
     def get_serializer_class(self):
         if self.request.method in ["POST", "PATCH", "PUT"]:

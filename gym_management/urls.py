@@ -19,6 +19,7 @@ from django.urls import path, include
 from rest_framework_nested import routers
 from plans.views import PlansViewSet, FitnessClassesViewSet, ScheduledClassViewSet, AllReviewViewSet, ReviewViewset
 from bookings.views import BookPlansViewSet, BookClassesViewSet, AttendenceViewSet, PaymentPlansViewSet, DashboardViewSet
+from notification.views import NotificationViewSet
 from bookings.views import initiate_payment, payment_cancel, payment_success, payment_fail
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -38,6 +39,7 @@ router.register("attendence", AttendenceViewSet, basename="attendence")
 router.register("payment", PaymentPlansViewSet, basename="payment")
 router.register("all_reviews", AllReviewViewSet, basename="all_reviews")
 router.register("dashboard", DashboardViewSet, basename="dashboard")
+router.register("notification", NotificationViewSet, basename="notification")
 
 fitness_cls_router = routers.NestedDefaultRouter(router, "fitness_classes", lookup='fitness_class')
 fitness_cls_router.register('reviews', ReviewViewset, basename='fitness_class-reviews')

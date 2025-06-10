@@ -11,6 +11,8 @@ from rest_framework import status
 from django.http import HttpResponseRedirect
 from decouple import config
 from django.db.models import Sum, Count
+from notification.models import Notification
+from user.models import CustomUser
 
 # Create your views here.
 class BookPlansViewSet(ModelViewSet):
@@ -58,6 +60,14 @@ class AttendenceViewSet(ModelViewSet):
     filterset_fields = ("scheduled_class_id",)
     http_method_names = ["get", "put"]
     serializer_class = ClassAttendence
+
+    def perform_update(self, serializer):
+        serializer.save()
+        data = serializer.data
+        user = CustomUser.objects.get(id = data.get("user").get("id"))
+        notification = Notification.objects.create(message=f"Attendence marked as {data.get("attendence")} for {data.get("scheduled_class").get("fitness_class").get("name")} class")
+        notification.receiver.add(user)
+
 
     def get_queryset(self):
         if self.request.user.is_staff:
