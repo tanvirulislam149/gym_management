@@ -5,7 +5,7 @@ from plans.serializers import PlansSerializer, FitnessClassSerializer, CreatePla
 from rest_framework.permissions import IsAdminUser
 from plans.permissions import IsReviewAuthorOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
-from notification.models import Notification
+from notification.models import Notification, NotificationMessage
 from user.models import CustomUser
 
 # Create your views here.
@@ -46,8 +46,12 @@ class ScheduledClassViewSet(ModelViewSet):
         data = serializer.data
         users = CustomUser.objects.all()
         className = Fitness_classes_category.objects.get(id=data.get("fitness_class"))
-        notification = Notification.objects.create(message=f"New class available on {className}.")
-        notification.receiver.add(*users)
+        notification_msg = NotificationMessage.objects.create(message_text=f"New class available on {className}.")
+        notifications = [
+            Notification(user=user, message=notification_msg, is_read=False) 
+            for user in users
+        ]
+        Notification.objects.bulk_create(notifications)
 
     def get_serializer_class(self):
         if self.request.method in ["POST", "PATCH", "PUT"]:

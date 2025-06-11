@@ -11,7 +11,7 @@ from rest_framework import status
 from django.http import HttpResponseRedirect
 from decouple import config
 from django.db.models import Sum, Count
-from notification.models import Notification
+# from notification.models import Notification, NotificationMessage
 from user.models import CustomUser
 
 # Create your views here.
@@ -61,12 +61,16 @@ class AttendenceViewSet(ModelViewSet):
     http_method_names = ["get", "put"]
     serializer_class = ClassAttendence
 
-    def perform_update(self, serializer):
-        serializer.save()
-        data = serializer.data
-        user = CustomUser.objects.get(id = data.get("user").get("id"))
-        notification = Notification.objects.create(message=f"Attendence marked as {data.get("attendence")} for {data.get("scheduled_class").get("fitness_class").get("name")} class")
-        notification.receiver.add(user)
+    # def perform_update(self, serializer):
+    #     serializer.save()
+    #     data = serializer.data
+    #     user = CustomUser.objects.get(id = data.get("user").get("id"))
+    #     print(user)
+    #     notification_msg = NotificationMessage.objects.create(message_text=f"Attendence marked as {data.get("attendence")} for {data.get("scheduled_class").get("fitness_class").get("name")} class")
+    #     print(notification_msg)
+    #     notification_msg.user.add(user)
+    #     notification = Notification.objects.create(user=user, message=notification_msg)
+    #     print(notification)
 
 
     def get_queryset(self):
