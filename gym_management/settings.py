@@ -36,6 +36,7 @@ ALLOWED_HOSTS = [".vercel.app", "127.0.0.1"]
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "whitenoise.runserver_nostatic",
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "channels",
     "debug_toolbar",
     "drf_yasg",
     "corsheaders",
@@ -92,7 +94,15 @@ INTERNAL_IPS = [
     # ...
 ]
 
-WSGI_APPLICATION = 'gym_management.wsgi.app'
+# WSGI_APPLICATION = 'gym_management.wsgi.app'
+ASGI_APPLICATION = 'gym_management.asgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {"hosts": [("127.0.0.1", 6379)]},
+    },
+}
 
 
 CORS_ALLOWED_ORIGINS = [
