@@ -73,7 +73,7 @@ class AttendenceViewSet(ModelViewSet):
 
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
-            "public",
+            "public_notification",
             {
                 "type": "send_notification",
                 "message": msg
