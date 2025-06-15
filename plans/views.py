@@ -7,6 +7,8 @@ from plans.permissions import IsReviewAuthorOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from notification.models import Notification, NotificationMessage
 from user.models import CustomUser
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 # Create your views here.
 class PlansViewSet(ModelViewSet):
@@ -46,12 +48,22 @@ class ScheduledClassViewSet(ModelViewSet):
         data = serializer.data
         users = CustomUser.objects.all()
         className = Fitness_classes_category.objects.get(id=data.get("fitness_class"))
-        notification_msg = NotificationMessage.objects.create(message_text=f"New class available on {className}.")
+        msg = f"New class available on {className}."
+        notification_msg = NotificationMessage.objects.create(message_text=msg)
         notifications = [
             Notification(user=user, message=notification_msg, is_read=False) 
             for user in users
         ]
         Notification.objects.bulk_create(notifications)
+
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "public_notification",
+            {
+                "type": "send_notification",
+                "message": msg
+            }
+        )
 
     def get_serializer_class(self):
         if self.request.method in ["POST", "PATCH", "PUT"]:
