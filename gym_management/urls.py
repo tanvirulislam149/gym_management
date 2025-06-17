@@ -19,15 +19,14 @@ from django.urls import path, include
 from rest_framework_nested import routers
 from plans.views import PlansViewSet, FitnessClassesViewSet, ScheduledClassViewSet, AllReviewViewSet, ReviewViewset
 from bookings.views import BookPlansViewSet, BookClassesViewSet, AttendenceViewSet, PaymentPlansViewSet, DashboardViewSet
-from notification.views import NotificationViewSet
 from bookings.views import initiate_payment, payment_cancel, payment_success, payment_fail
+from notification.views import NotificationViewSet
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.conf.urls.static import static
 from django.conf import settings
 from debug_toolbar.toolbar import debug_toolbar_urls
-
 
 router = routers.DefaultRouter()
 router.register("plans", PlansViewSet, basename="plans")
@@ -70,6 +69,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
+    path('notification/', include("notification.urls")),
     path('', include(router.urls)),
     path('', include(fitness_cls_router.urls)),
     path("makePayment/initiate/", initiate_payment, name="initiate-payment"),
