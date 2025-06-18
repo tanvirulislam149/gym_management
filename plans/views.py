@@ -61,7 +61,8 @@ class ScheduledClassViewSet(ModelViewSet):
             "public_notification",
             {
                 "type": "send_notification",
-                "message": msg
+                "message": msg,
+                "is_read": False
             }
         )
 

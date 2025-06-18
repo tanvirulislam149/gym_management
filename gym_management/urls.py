@@ -69,7 +69,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
-    path('notification/', include("notification.urls")),
     path('', include(router.urls)),
     path('', include(fitness_cls_router.urls)),
     path("makePayment/initiate/", initiate_payment, name="initiate-payment"),

@@ -18,5 +18,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'message': {
                 'message_text': event["message"]
-            }
+            },
+            "is_read": event["is_read"]
         }))

@@ -76,7 +76,8 @@ class AttendenceViewSet(ModelViewSet):
             f"notify_user_{user.id}",
             {
                 "type": "send_notification",
-                "message": msg
+                "message": msg,
+                "is_read": False
             }
         )
 
