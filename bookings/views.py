@@ -11,6 +11,10 @@ from rest_framework import status
 from django.http import HttpResponseRedirect
 from decouple import config
 from django.db.models import Sum, Count
+from notification.models import Notification, NotificationMessage
+from user.models import CustomUser
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 # Create your views here.
 class BookPlansViewSet(ModelViewSet):
@@ -58,6 +62,26 @@ class AttendenceViewSet(ModelViewSet):
     filterset_fields = ("scheduled_class_id",)
     http_method_names = ["get", "put"]
     serializer_class = ClassAttendence
+
+    def perform_update(self, serializer):
+        serializer.save()
+        data = serializer.data
+        user = CustomUser.objects.get(id = data.get("user").get("id"))
+        msg = f"Attendence marked as {data.get("attendence")} for {data.get("scheduled_class").get("fitness_class").get("name")} at {data.get("scheduled_class").get("date_time")} class"
+        notification_msg = NotificationMessage.objects.create(message_text=msg)
+        notification = Notification.objects.create(user=user, message=notification_msg)
+
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f"notify_user_{user.id}",
+            {
+                "type": "send_notification",
+                "message": msg,
+                "is_read": False
+            }
+        )
+
+
 
     def get_queryset(self):
         if self.request.user.is_staff:

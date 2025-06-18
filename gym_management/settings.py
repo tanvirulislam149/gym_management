@@ -28,14 +28,15 @@ AUTH_USER_MODEL = 'user.CustomUser'
 SECRET_KEY = 'django-insecure-&-=p=!j-4lgiuij5dz^cvc0h4$sobb&4&3ks7*@1!p1-4$-a$g'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = False 
 
-ALLOWED_HOSTS = [".vercel.app", "127.0.0.1"]
+ALLOWED_HOSTS = [".vercel.app", "127.0.0.1", '.onrender.com']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "whitenoise.runserver_nostatic",
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,12 +44,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "channels",
     "debug_toolbar",
     "drf_yasg",
     "corsheaders",
     'rest_framework',
     'django_filters',
     'djoser',
+    "notification",
     "user",
     "api",
     "plans",
@@ -91,7 +94,15 @@ INTERNAL_IPS = [
     # ...
 ]
 
-WSGI_APPLICATION = 'gym_management.wsgi.app'
+# WSGI_APPLICATION = 'gym_management.wsgi.app'
+ASGI_APPLICATION = 'gym_management.asgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {"hosts": [config("REDIS_URL")]},
+    },
+}
 
 
 CORS_ALLOWED_ORIGINS = [
