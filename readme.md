@@ -6,7 +6,7 @@ A modern web application for managing gym memberships, classes, schedules, and m
 
 [Click here to visit the FRONTEND live site](https://gym-management-client-lilac.vercel.app/)
 
-[Click here to visit the BACKEND live site](https://gym-management-henna.vercel.app/)
+[Click here to visit the BACKEND live site](https://gym-management-0fmi.onrender.com/)
 
 ## Credentials
 
@@ -24,6 +24,7 @@ A modern web application for managing gym memberships, classes, schedules, and m
 
 - Member registration and login
 - Admin dashboard for gym management
+- Real time notification for user
 - Class scheduling and booking
 - Membership plans and payments
 - Attendance tracking
@@ -40,8 +41,10 @@ A modern web application for managing gym memberships, classes, schedules, and m
 **Backend:**
 
 - Django Rest Framework
+- Django channels, Redis
 - PostgreSQL
 - JWT for authentication
+- WebSockets for notification
 
 ## Installation
 
@@ -101,4 +104,5 @@ REDIS_URL=your_REDIS_URL
 
 **Deployment:**
 
-- Vercel (Frontend & Backend)
+- Vercel (Frontend)
+- Render (Backend)
