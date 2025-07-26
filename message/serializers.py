@@ -21,4 +21,8 @@ class CreateMessageSerializer(ModelSerializer):
     class Meta:
         model = Message
         fields = ["id", "sender", "receiver", "message_text", "is_read"]
-        read_only_fields = ["is_read"]
+        read_only_fields = ["is_read", "sender"]
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        return Message.objects.create(sender=user, **validated_data)
