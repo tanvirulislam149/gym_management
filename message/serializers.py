@@ -13,7 +13,7 @@ class MessageSerializer(ModelSerializer):
     
     class Meta:
         model = Message
-        fields = ["id", "sender", "receiver", "message_text", "is_read"]
+        fields = ["id", "sender", "receiver", "message_text", "is_read", "created_at"]
         read_only_fields = ["is_read"]
 
 
