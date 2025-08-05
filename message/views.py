@@ -8,6 +8,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response 
 from user.models import CustomUser
 from user.serializers import UserSerializer
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 
 # Create your views here.
@@ -22,7 +24,25 @@ class MessageViewSet(ModelViewSet):
     def get_queryset(self):   # get message url => /message/?receiver=1
         receiver_id = self.request.query_params.get("receiver")
         return Message.objects.select_related("sender").select_related("receiver").filter(Q(sender=self.request.user, receiver_id=receiver_id) | Q(sender=receiver_id, receiver_id=self.request.user))
-        
+
+    def perform_create(self, serializer):
+        serializer.save()
+        data = serializer.data
+        print("data",data)
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f"chat_room_of_{data.get("receiver")}",
+            {
+                "type": "send_message",
+                "id": data.get("id"),
+                "message_text": data.get("message_text"),
+                "sender": data.get("sender"),
+                "receiver": data.get("receiver"),
+                "is_read": False
+            }
+        )
+
+
 
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
