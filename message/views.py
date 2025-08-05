@@ -13,6 +13,6 @@ class MessageViewSet(ModelViewSet):
             return CreateMessageSerializer
         return MessageSerializer
 
-    def get_queryset(self):
+    def get_queryset(self):   # get message url => /message/?receiver=1
         receiver_id = self.request.query_params.get("receiver")
         return Message.objects.filter(sender=self.request.user, receiver_id=receiver_id)
