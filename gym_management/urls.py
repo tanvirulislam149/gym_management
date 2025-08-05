@@ -28,6 +28,7 @@ from drf_yasg import openapi
 from django.conf.urls.static import static
 from django.conf import settings
 from debug_toolbar.toolbar import debug_toolbar_urls
+from message.views import get_conversations
 
 router = routers.DefaultRouter()
 router.register("plans", PlansViewSet, basename="plans")
@@ -77,6 +78,7 @@ urlpatterns = [
     path("makePayment/success/", payment_success, name="payment-success"),
     path("makePayment/fail/", payment_fail, name="payment-fail"),
     path("makePayment/cancel/", payment_cancel, name="payment-cancel"),
+    path("get_conversations/", get_conversations, name="get_conversations"),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ] + debug_toolbar_urls()
