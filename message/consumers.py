@@ -4,6 +4,7 @@ import json
 class MessageConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
+        print(self.room_name)
         self.private_room = f"chat_room_of_{self.room_name}"
         print(self.private_room)
         await self.channel_layer.group_add(self.private_room, self.channel_name)

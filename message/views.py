@@ -29,9 +29,11 @@ class MessageViewSet(ModelViewSet):
         serializer.save()
         data = serializer.data
         print("data",data)
+        room = [data.get("receiver"), data.get("sender")]
+        room.sort()
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
-            f"chat_room_of_{data.get("receiver")}",
+            f"chat_room_of_{room[0]}and{room[1]}",
             {
                 "type": "send_message",
                 "id": data.get("id"),
