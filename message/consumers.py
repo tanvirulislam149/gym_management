@@ -19,7 +19,7 @@ class MessageConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             "id": event["id"],
             "message_text": event["message_text"],
-            "sender": event["sender"],
-            "receiver": event["receiver"],
+            "sender": {"id": event["sender"]},
+            "receiver": {"id": event["receiver"]},
             "is_read": False
         }))
