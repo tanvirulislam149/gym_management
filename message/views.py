@@ -26,6 +26,29 @@ class MessageViewSet(ModelViewSet):
         return Message.objects.select_related("sender").select_related("receiver").filter(Q(sender=self.request.user, receiver_id=receiver_id) | Q(sender=receiver_id, receiver_id=self.request.user))
 
     def perform_create(self, serializer):
+        sender = self.request.user.id 
+        validated_data = serializer.validated_data
+        receiver = validated_data.get("receiver")
+        print("receiver", receiver.id, validated_data)
+        print("sender", sender)
+        exists = Message.objects.filter(sender_id=sender).exists()
+        print("exists", exists)
+
+        if(not exists):
+            user = CustomUser.objects.filter(id=sender)
+            print("user", user)
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+            f"conversation_{receiver.id}",
+                {
+                    "type": "send_conversation",
+                    "id": user[0].id,
+                    "email": user[0].email,
+                    "first_name": user[0].first_name,
+                    "last_name": user[0].last_name
+                }
+            )
+
         serializer.save()
         data = serializer.data
         print("data",data)
@@ -43,6 +66,7 @@ class MessageViewSet(ModelViewSet):
                 "is_read": False
             }
         )
+
 
 
 
