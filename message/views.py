@@ -66,7 +66,7 @@ class MessageViewSet(ModelViewSet):
             }
         )
 
-    @action(detail=True, methods=["get"])
+    @action(detail=True, methods=["post"])
     def read_message(self, request, pk = None):
         # url => /message/message_id/read_message/
         try:
