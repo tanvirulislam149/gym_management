@@ -10,6 +10,8 @@ from user.models import CustomUser
 from user.serializers import UserSerializer
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from rest_framework.decorators import action
+
 
 
 # Create your views here.
@@ -26,17 +28,14 @@ class MessageViewSet(ModelViewSet):
         return Message.objects.select_related("sender").select_related("receiver").filter(Q(sender=self.request.user, receiver_id=receiver_id) | Q(sender=receiver_id, receiver_id=self.request.user))
 
     def perform_create(self, serializer):
+        # when the user send 1st message, conversation should show
         sender = self.request.user.id 
         validated_data = serializer.validated_data
         receiver = validated_data.get("receiver")
-        print("receiver", receiver.id, validated_data)
-        print("sender", sender)
         exists = Message.objects.filter(sender_id=sender).exists()
-        print("exists", exists)
 
         if(not exists):
             user = CustomUser.objects.filter(id=sender)
-            print("user", user)
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(
             f"conversation_{receiver.id}",
@@ -48,10 +47,10 @@ class MessageViewSet(ModelViewSet):
                     "last_name": user[0].last_name
                 }
             )
+            # After sending conversation, message is sent and saved
 
         serializer.save()
         data = serializer.data
-        print("data",data)
         room = [data.get("receiver"), data.get("sender")]
         room.sort()
         channel_layer = get_channel_layer()
@@ -66,6 +65,21 @@ class MessageViewSet(ModelViewSet):
                 "is_read": False
             }
         )
+
+    @action(detail=True, methods=["get"])
+    def read_message(self, request, pk = None):
+        # url => /message/message_id/read_message/
+        try:
+            msg = Message.objects.filter(id = pk).first()
+            if msg.receiver.id == self.request.user.id:
+                msg.is_read = True
+                msg.save()
+                return Response({"message": "messsage is read."})
+            else:
+                raise ValueError("Message not found")
+        except:
+            return Response({"error": "Something happend in the server."})
+
 
 
 
