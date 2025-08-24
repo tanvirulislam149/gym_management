@@ -1,4 +1,5 @@
 from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from message.models import Message
 from user.models import CustomUser
 
@@ -26,3 +27,17 @@ class CreateMessageSerializer(ModelSerializer):
     def create(self, validated_data):
         user = self.context['request'].user
         return Message.objects.create(sender=user, **validated_data)
+    
+
+class ConversationSerializer(ModelSerializer):
+    has_unread = serializers.SerializerMethodField(method_name="get_has_unread")
+    # user = SimpleUserSerializer()
+
+    class Meta:
+        model = CustomUser
+        fields = ["id", "email","first_name", "last_name", "image", "has_unread"]
+        read_only_fields = ["has_unread"]
+
+    def get_has_unread(self, obj):
+        # return obj.email
+        return True if Message.objects.filter(sender = obj, is_read=False).exists() else False

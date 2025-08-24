@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from message.models import Message
-from message.serializers import MessageSerializer, CreateMessageSerializer
+from message.serializers import MessageSerializer, CreateMessageSerializer, ConversationSerializer
 from django.db.models import Q
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response 
@@ -89,5 +89,5 @@ class MessageViewSet(ModelViewSet):
 def get_conversations(request):
     conversation_ids = Message.objects.values_list("sender", flat=True).distinct()
     conversations = CustomUser.objects.filter(id__in = conversation_ids)
-    serializer = UserSerializer(conversations, many=True)
+    serializer = ConversationSerializer(conversations, many=True)
     return Response(serializer.data)
