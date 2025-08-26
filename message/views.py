@@ -32,22 +32,21 @@ class MessageViewSet(ModelViewSet):
         sender = self.request.user.id 
         validated_data = serializer.validated_data
         receiver = validated_data.get("receiver")
-        exists = Message.objects.filter(sender_id=sender).exists()
+        # exists = Message.objects.filter(sender_id=sender).exists()
 
-        if(not exists):
-            user = CustomUser.objects.filter(id=sender)
-            channel_layer = get_channel_layer()
-            async_to_sync(channel_layer.group_send)(
-            f"conversation_{receiver.id}",
-                {
-                    "type": "send_conversation",
-                    "id": user[0].id,
-                    "email": user[0].email,
-                    "first_name": user[0].first_name,
-                    "last_name": user[0].last_name
-                }
-            )
-            # After sending conversation, message is sent and saved
+        user = CustomUser.objects.filter(id=sender)
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+        f"conversation_{receiver.id}",
+            {
+                "type": "send_conversation",
+                "id": user[0].id,
+                "email": user[0].email,
+                "first_name": user[0].first_name,
+                "last_name": user[0].last_name
+            }
+        )
+        # After sending conversation, message is sent and saved
 
         serializer.save()
         data = serializer.data

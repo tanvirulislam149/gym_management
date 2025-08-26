@@ -55,5 +55,6 @@ class ConversationConsumer(AsyncWebsocketConsumer):
             "id": event["id"],
             "email": event["email"],
             "first_name": event["first_name"],
-            "last_name": event["last_name"]
+            "last_name": event["last_name"],
+            "has_unread": True
         }))
