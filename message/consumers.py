@@ -54,6 +54,7 @@ class ConversationConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             "id": event["id"],
             "email": event["email"],
+            "image": event["image"],
             "first_name": event["first_name"],
             "last_name": event["last_name"],
             "has_unread": True

@@ -42,6 +42,7 @@ class MessageViewSet(ModelViewSet):
                 "type": "send_conversation",
                 "id": user[0].id,
                 "email": user[0].email,
+                "image": user[0].image.url if user[0].image else None,  # error coming from this line
                 "first_name": user[0].first_name,
                 "last_name": user[0].last_name
             }

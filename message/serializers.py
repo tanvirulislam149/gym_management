@@ -32,6 +32,7 @@ class CreateMessageSerializer(ModelSerializer):
 class ConversationSerializer(ModelSerializer):
     has_unread = serializers.SerializerMethodField(method_name="get_has_unread")
     # user = SimpleUserSerializer()
+    image = serializers.SerializerMethodField(method_name="get_image_url")
 
     class Meta:
         model = CustomUser
@@ -41,3 +42,6 @@ class ConversationSerializer(ModelSerializer):
     def get_has_unread(self, obj):
         # return obj.email
         return True if Message.objects.filter(sender = obj, is_read=False).exists() else False
+    
+    def get_image_url(self, obj):
+        return obj.image.url if obj.image else None
