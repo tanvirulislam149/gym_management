@@ -28,7 +28,7 @@ AUTH_USER_MODEL = 'user.CustomUser'
 SECRET_KEY = 'django-insecure-&-=p=!j-4lgiuij5dz^cvc0h4$sobb&4&3ks7*@1!p1-4$-a$g'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True 
+DEBUG = False 
 
 ALLOWED_HOSTS = [".vercel.app", "127.0.0.1", '.onrender.com']
 
@@ -101,8 +101,8 @@ ASGI_APPLICATION = 'gym_management.asgi.application'
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
-        # "CONFIG": {"hosts": [config("REDIS_URL")]},   # for production
-        "CONFIG": {"hosts": [("127.0.0.1", 6379)]},   # for running locally
+        "CONFIG": {"hosts": [config("REDIS_URL")]},   # for production
+        #"CONFIG": {"hosts": [("127.0.0.1", 6379)]},   # for running locally
     },
 }
 
