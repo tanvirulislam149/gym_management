@@ -24,7 +24,7 @@ A modern web application for managing gym memberships, classes, schedules, and m
 
 - Member registration and login
 - Admin dashboard for gym management
-- Real time notification for user
+- Real time notification and chat with admin feature
 - Class scheduling and booking
 - Membership plans and payments
 - Attendance tracking
