@@ -31,6 +31,7 @@ SECRET_KEY = 'django-insecure-&-=p=!j-4lgiuij5dz^cvc0h4$sobb&4&3ks7*@1!p1-4$-a$g
 DEBUG = False 
 
 ALLOWED_HOSTS = [".vercel.app", "127.0.0.1", '.onrender.com']
+CORS_ALLOW_CREDENTIALS = True
 
 
 # Application definition
