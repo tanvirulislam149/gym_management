@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'djoser',
     "notification",
     "user",
+    "message",
     "api",
     "plans",
     "bookings",
@@ -100,7 +101,8 @@ ASGI_APPLICATION = 'gym_management.asgi.application'
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {"hosts": [config("REDIS_URL")]},
+        "CONFIG": {"hosts": [config("REDIS_URL")]},   # for production
+        #"CONFIG": {"hosts": [("127.0.0.1", 6379)]},   # for running locally
     },
 }
 

@@ -59,10 +59,10 @@ python -m venv gym_env
 
 # Activate the virtual environment
 # On Windows:
-env\Scripts\activate
+gym_env\Scripts\activate
 
 # On macOS/Linux:
-source env/bin/activate
+source gym_env/bin/activate
 
 # Install Dependencies
 pip install -r requirements.txt

@@ -16,10 +16,11 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gym_management.settings')
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 import notification.routing
+import message.routing
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
     "websocket": AuthMiddlewareStack(
-        URLRouter(notification.routing.websocket_urlpatterns)
+        URLRouter(notification.routing.websocket_urlpatterns + message.routing.websocket_urlpatterns)
     )
 })
