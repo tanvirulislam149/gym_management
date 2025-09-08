@@ -25,7 +25,8 @@ class MessageViewSet(ModelViewSet):
 
     def get_queryset(self):   # get message url => /message/?receiver=1
         receiver_id = self.request.query_params.get("receiver")
-        return Message.objects.select_related("sender").select_related("receiver").filter(Q(sender=self.request.user, receiver_id=receiver_id) | Q(sender=receiver_id, receiver_id=self.request.user))
+        return Message.objects.select_related("sender").select_related("receiver").filter(Q(sender=self.request.user, receiver_id=receiver_id) | Q(sender=receiver_id, receiver_id=self.request.user)).order_by('created_at')
+
 
     def perform_create(self, serializer):
         # when the user send 1st message, conversation should show
