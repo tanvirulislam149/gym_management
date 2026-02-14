@@ -9,10 +9,10 @@ class UserCreateSerializer(BaseUserCreateSerializer):
 
 
 class UserSerializer(BaseUserSerializer):
-    is_staff = serializers.SerializerMethodField(method_name="get_is_staff")
+    # is_staff = serializers.SerializerMethodField(method_name="get_is_staff")
     image = serializers.ImageField(required=False, allow_null=True)
     class Meta(BaseUserSerializer.Meta):
         fields = ["id", "email", "image","first_name", "last_name", "password", "address", "phone_number", "is_staff"]
     
-    def get_is_staff(self, user: CustomUser):
-        return user.is_staff
+    # def get_is_staff(self, user: CustomUser):
+    #     return user.is_staff

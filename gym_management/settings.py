@@ -34,7 +34,7 @@ ALLOWED_HOSTS = [".vercel.app", "127.0.0.1", '.onrender.com']
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    config("FRONTEND_URL"), "http://localhost:3000", "http://127.0.0.1:8000", "https://uni-gym-project.vercel.app/" # university project url
+    config("FRONTEND_URL"), "http://localhost:3000", "http://127.0.0.1:8000"
 ]
 
 
