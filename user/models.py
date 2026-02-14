@@ -10,6 +10,7 @@ class CustomUser(AbstractUser):
     address = models.TextField(blank=True, null=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     image = CloudinaryField("image", blank=True, null=True)
+    # role = models.TextField(choices=["Admin", "User"])
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
