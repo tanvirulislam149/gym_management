@@ -102,6 +102,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from message.models import Conversation, Message
 from message.serializers import ConvoSerializer, CreateConvoSerializer, MessageSerializer, CreateMessageSerializer
+from rest_framework.exceptions import ValidationError
 
 class ConvoViewset(ModelViewSet):
     queryset = Conversation.objects.all()
@@ -111,6 +112,14 @@ class ConvoViewset(ModelViewSet):
         if self.request.method in ["POST", "PUT", "PATCH"]:
             return CreateConvoSerializer
         return ConvoSerializer
+    
+    def perform_create(self, serializer):
+        exists = Conversation.objects.filter(sender = self.request.user).first()
+        if not exists:
+            serializer.save(sender = self.request.user)
+        else:
+            raise ValidationError({"Error": "Conversation already exists"})
+
 
 class MessageViewset(ModelViewSet):
     queryset = Message.objects.all()

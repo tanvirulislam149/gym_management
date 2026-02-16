@@ -63,15 +63,14 @@ class SimpleUserSerializer(ModelSerializer):
 
 class ConvoSerializer(ModelSerializer):
     sender = SimpleUserSerializer()
-    receiver = SimpleUserSerializer()
     class Meta:
         model = Conversation
-        fields = ["id", "sender", "receiver", "created_at"]
+        fields = ["id", "sender", "created_at"]
 
 class CreateConvoSerializer(ModelSerializer):
     class Meta:
         model = Conversation
-        fields = ["id", "sender", "receiver", "created_at"]
+        fields = ["id", "created_at"]
 
 
 
