@@ -57,9 +57,13 @@ from message.models import Message, Conversation
 from user.models import CustomUser
 
 class SimpleUserSerializer(ModelSerializer):
+    image = serializers.SerializerMethodField(method_name="get_image_url")
     class Meta:
         model = CustomUser
-        fields = ["id", "email", "first_name", "last_name"]
+        fields = ["id", "email", "first_name", "last_name", "image"]
+
+    def get_image_url(self, obj):
+        return obj.image.url if obj.image else None
 
 class ConvoSerializer(ModelSerializer):
     sender = SimpleUserSerializer()

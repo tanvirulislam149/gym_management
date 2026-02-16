@@ -105,8 +105,13 @@ from message.serializers import ConvoSerializer, CreateConvoSerializer, MessageS
 from rest_framework.exceptions import ValidationError
 
 class ConvoViewset(ModelViewSet):
-    queryset = Conversation.objects.all()
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Conversation.objects.all()
+        else:
+            return Conversation.objects.filter(sender = self.request.user)
 
     def get_serializer_class(self):
         if self.request.method in ["POST", "PUT", "PATCH"]:
