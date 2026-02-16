@@ -101,7 +101,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from message.models import Conversation, Message
-from message.serializers import ConvoSerializer, CreateConvoSerializer, MessageSerializer
+from message.serializers import ConvoSerializer, CreateConvoSerializer, MessageSerializer, CreateMessageSerializer
 
 class ConvoViewset(ModelViewSet):
     queryset = Conversation.objects.all()
@@ -115,5 +115,9 @@ class ConvoViewset(ModelViewSet):
 class MessageViewset(ModelViewSet):
     queryset = Message.objects.all()
     permission_classes = [IsAuthenticated]
-    serializer_class = MessageSerializer
+
+    def get_serializer_class(self):
+        if self.request.method in ["POST", "PUT", "PATCH"]:
+            return CreateMessageSerializer
+        return MessageSerializer 
 
