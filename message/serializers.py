@@ -76,6 +76,7 @@ class CreateConvoSerializer(ModelSerializer):
 
 
 class MessageSerializer(ModelSerializer):
+    conversation = ConvoSerializer()
     class Meta:
         model = Message
         fields = ["id", "conversation", "message_text", "is_read", "created_at"]
