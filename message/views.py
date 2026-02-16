@@ -127,8 +127,12 @@ class ConvoViewset(ModelViewSet):
 
 
 class MessageViewset(ModelViewSet):
-    queryset = Message.objects.all()
+    # queryset = Message.objects.all()
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):   # get message url => /message/?convo_id=id
+        convo_id = self.request.query_params.get("convo_id")
+        return Message.objects.select_related("conversation").select_related("conversation__sender").filter(conversation_id = convo_id)
 
     def get_serializer_class(self):
         if self.request.method in ["POST", "PUT", "PATCH"]:
