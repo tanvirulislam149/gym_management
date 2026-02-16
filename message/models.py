@@ -30,8 +30,8 @@ class Conversation(models.Model):
     
 class Message(models.Model):
     id = models.UUIDField(primary_key=True, default = uuid4, editable=False)
+    message_sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="msg_sender")
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name="message")
-    msg_sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     message_text = models.TextField()
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -78,11 +78,11 @@ class MessageSerializer(ModelSerializer):
     conversation = ConvoSerializer()
     class Meta:
         model = Message
-        fields = ["id", "conversation", "message_text", "is_read", "created_at"]
+        fields = ["id", "conversation","message_sender", "message_text", "is_read", "created_at"]
 
 class CreateMessageSerializer(ModelSerializer):
     class Meta:
         model = Message
-        fields = ["id", "conversation", "message_text"]
+        fields = ["id", "conversation","message_sender", "message_text"]
 
 
