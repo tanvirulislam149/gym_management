@@ -21,14 +21,14 @@ from plans.views import PlansViewSet, FitnessClassesViewSet, ScheduledClassViewS
 from bookings.views import BookPlansViewSet, BookClassesViewSet, AttendenceViewSet, PaymentPlansViewSet, DashboardViewSet
 from bookings.views import initiate_payment, payment_cancel, payment_success, payment_fail
 from notification.views import NotificationViewSet
-from message.views import MessageViewSet
+from message.views import ConvoViewset
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.conf.urls.static import static
 from django.conf import settings
 from debug_toolbar.toolbar import debug_toolbar_urls
-from message.views import get_conversations
+# from message.views import get_conversations
 
 router = routers.DefaultRouter()
 router.register("plans", PlansViewSet, basename="plans")
@@ -41,7 +41,8 @@ router.register("payment", PaymentPlansViewSet, basename="payment")
 router.register("all_reviews", AllReviewViewSet, basename="all_reviews")
 router.register("dashboard", DashboardViewSet, basename="dashboard")
 router.register("notification", NotificationViewSet, basename="notification")
-router.register("message", MessageViewSet, basename="message")
+router.register("conversations", ConvoViewset, basename="conversations")
+# router.register("message", MessageViewSet, basename="message")
 
 fitness_cls_router = routers.NestedDefaultRouter(router, "fitness_classes", lookup='fitness_class')
 fitness_cls_router.register('reviews', ReviewViewset, basename='fitness_class-reviews')
@@ -78,7 +79,7 @@ urlpatterns = [
     path("makePayment/success/", payment_success, name="payment-success"),
     path("makePayment/fail/", payment_fail, name="payment-fail"),
     path("makePayment/cancel/", payment_cancel, name="payment-cancel"),
-    path("get_conversations/", get_conversations, name="get_conversations"),
+    # # # path("get_conversations/", get_conversations, name="get_conversations"),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ] + debug_toolbar_urls()
