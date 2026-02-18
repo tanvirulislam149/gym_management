@@ -67,6 +67,18 @@ class SimpleUserSerializer(ModelSerializer):
 
 class ConvoSerializer(ModelSerializer):
     sender = SimpleUserSerializer()
+    has_unread = serializers.SerializerMethodField(method_name="get_has_unread")
+    class Meta:
+        model = Conversation
+        fields = ["id", "sender", "created_at", "has_unread"]
+
+    def get_has_unread(self, obj):   # need to work on optimization
+        # return obj.email
+        last_msg = Message.objects.filter(conversation_id = obj.id).order_by('created_at').last()
+        return True if last_msg.is_read == False else False
+    
+class SimpleConvoSerializer(ModelSerializer):
+    sender = SimpleUserSerializer()
     class Meta:
         model = Conversation
         fields = ["id", "sender", "created_at"]
@@ -79,7 +91,7 @@ class CreateConvoSerializer(ModelSerializer):
 
 
 class MessageSerializer(ModelSerializer):
-    conversation = ConvoSerializer()
+    conversation = SimpleConvoSerializer()
     class Meta:
         model = Message
         fields = ["id", "conversation","message_sender", "message_text", "is_read", "created_at"]

@@ -105,6 +105,8 @@ from message.serializers import ConvoSerializer, CreateConvoSerializer, MessageS
 from rest_framework.exceptions import ValidationError
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 class ConvoViewset(ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -155,11 +157,26 @@ class MessageViewset(ModelViewSet):
                 "is_read": False
             }
         )
+
+    @action(detail=True, methods=["post"])
+    def read_message(self, request, pk = None):
+        # url => /message/message_id/read_message/
+        try:
+            msg = Message.objects.filter(id = pk).first()
+            print(msg.message_sender.id, self.request.user.id)
+            if msg.message_sender.id != self.request.user.id:
+                msg.is_read = True
+                msg.save()
+                return Response({"message": "messsage is read."})
+            else:
+                raise ValueError("Message not found")
+        except:
+            return Response({"error": "Something happend in the server."})
         
 
     def get_queryset(self):   # get message url => /message/?convo_id=id
         convo_id = self.request.query_params.get("convo_id")
-        return Message.objects.select_related("conversation").select_related("conversation__sender").filter(conversation_id = convo_id)
+        return Message.objects.select_related("conversation").select_related("conversation__sender").filter(conversation_id = convo_id).order_by('created_at')
 
     def get_serializer_class(self):
         if self.request.method in ["POST", "PUT", "PATCH"]:
