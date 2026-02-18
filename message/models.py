@@ -26,7 +26,7 @@ class Conversation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return f"{self.sender.email}"
+        return f"{self.sender.email} X {self.id}"
     
 class Message(models.Model):
     id = models.UUIDField(primary_key=True, default = uuid4, editable=False)

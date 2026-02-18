@@ -103,6 +103,8 @@ from rest_framework.permissions import IsAuthenticated
 from message.models import Conversation, Message
 from message.serializers import ConvoSerializer, CreateConvoSerializer, MessageSerializer, CreateMessageSerializer
 from rest_framework.exceptions import ValidationError
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 class ConvoViewset(ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -130,6 +132,31 @@ class MessageViewset(ModelViewSet):
     # queryset = Message.objects.all()
     permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        data = serializer.validated_data
+        user_id = data["conversation"].sender.id
+        serializer.save()
+        saved_data = serializer.data 
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f"chat_room_of_{user_id}",
+            {
+                "type": "send_message",
+                "id": saved_data.get("id"),
+                "conversation": {
+                    "id": str(data.get("conversation").id),
+                    "sender": {
+                        "id": data.get("conversation").sender.id,
+                        "email": data.get("conversation").sender.email,
+                    }
+                },
+                "message_sender": data.get("message_sender").id,
+                "message_text": data.get("message_text"),
+                "is_read": False
+            }
+        )
+        
+
     def get_queryset(self):   # get message url => /message/?convo_id=id
         convo_id = self.request.query_params.get("convo_id")
         return Message.objects.select_related("conversation").select_related("conversation__sender").filter(conversation_id = convo_id)
@@ -138,4 +165,5 @@ class MessageViewset(ModelViewSet):
         if self.request.method in ["POST", "PUT", "PATCH"]:
             return CreateMessageSerializer
         return MessageSerializer 
+
 
