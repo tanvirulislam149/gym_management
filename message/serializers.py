@@ -74,7 +74,7 @@ class ConvoSerializer(ModelSerializer):
 
     def get_has_unread(self, obj):   # need to work on optimization
         # return obj.email
-        last_msg = Message.objects.filter(conversation_id = obj.id).order_by('created_at').last()
+        last_msg = Message.objects.filter(conversation_id = obj.id, message_sender = obj.sender.id).order_by('created_at').last()
         return True if last_msg.is_read == False else False
     
 class SimpleConvoSerializer(ModelSerializer):
