@@ -18,6 +18,10 @@ class MessageConsumer(AsyncWebsocketConsumer):
 
     async def send_message(self, event):
         await self.send(text_data=json.dumps(event))
+    
+    async def msg_read(self, event):
+        print("check msg read")
+        await self.send(text_data=json.dumps(event))
 
     async def send_conversation(self, event):
         print("event convo", event)
