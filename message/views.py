@@ -163,9 +163,7 @@ class MessageViewset(ModelViewSet):
         # url => /message/message_id/read_message/
         try:
             msg = Message.objects.filter(id = pk).first()
-            print(msg.conversation.sender.id, msg.id)
             if msg.message_sender.id != self.request.user.id:
-                print("check 111")
                 channel_layer = get_channel_layer()
                 async_to_sync(channel_layer.group_send)(
                     f"chat_room_of_{msg.conversation.sender.id}",
@@ -175,7 +173,6 @@ class MessageViewset(ModelViewSet):
                         "is_read": True
                     }
                 )
-                print("check 222")
                 msg.is_read = True
                 msg.save()
                 return Response({"message": "messsage is read."})
