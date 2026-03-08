@@ -17,13 +17,23 @@ class MessageConsumer(AsyncWebsocketConsumer):
             # await self.channel_layer.group_discard("conversations", self.channel_name)
 
     async def send_message(self, event):
+        print("send msg event",event)
+        await self.channel_layer.group_send(
+            "conversations",
+            {
+                "type": "send_conversation_event",
+                "id": event["conversation"]["id"],
+                "has_unread": True
+            }
+        )
         await self.send(text_data=json.dumps(event))
+
     
     async def msg_read(self, event):
         await self.send(text_data=json.dumps(event))
 
     async def send_conversation(self, event):
-        print("event convo", event)
+        # print("event convo", event)
         await self.send(text_data=json.dumps({
             "id": event["id"],
             "email": event["email"],
