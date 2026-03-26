@@ -31,7 +31,6 @@ class BookPlansSerializer(serializers.ModelSerializer):
             start_date__lte=now(),
             end_date__gte=now()
         )
-        print(plan, "---------------")
         if plan and plan[0]:
             return f"{plan[0].start_date} to {plan[0].end_date}"
         else:
@@ -139,10 +138,8 @@ class ClassAttendence(serializers.ModelSerializer):
         scheduled_class = instance.scheduled_class
         attendence = validated_data["attendence"]
         if attendence == "Present":
-            print("present")
             scheduled_class.present_students += 1
         else:
-            print("absent")
             scheduled_class.present_students -= 1
             
         scheduled_class.save() 
